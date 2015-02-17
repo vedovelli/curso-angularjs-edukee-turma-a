@@ -51,11 +51,12 @@ class User extends Eloquent implements UserInterface, RemindableInterface{
 
 	public function removeUser($id)
 	{
-		if(!is_null(self::find($id)))
+		$user = self::find($id);
+		if(is_null($user))
 		{
-			return self::find($id)->delete();
+			return false;
 		}
-		return false;
+		return $user->delete();
 	}
 
 }

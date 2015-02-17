@@ -21,7 +21,12 @@ class UserController extends BaseController{
 
 	public function get($id)
 	{
-		return Response::json($this->user->get($id), 200);
+		$user = $this->user->get($id);
+		if(is_null($user))
+		{
+			return Response::json(['response' => 'Usuário não encontrado'], 400);
+		}
+		return Response::json($user, 200);
 	}
 
 	public function update($id)

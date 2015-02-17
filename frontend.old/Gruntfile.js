@@ -1,4 +1,4 @@
-// Generated on 2015-02-17 using generator-angular 0.10.0
+// Generated on 2015-02-07 using generator-angular 0.10.0
 'use strict';
 
 // # Globbing

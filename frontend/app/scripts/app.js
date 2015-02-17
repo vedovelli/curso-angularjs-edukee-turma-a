@@ -19,25 +19,29 @@ angular
   ])
   .config(function ($routeProvider) {
     $routeProvider
-      .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
-      })
-      .when('/about', {
-        templateUrl: 'views/about.html',
-        controller: 'AboutCtrl'
-      })
       .when('/users', {
         templateUrl: 'views/users.html',
         controller: 'UsersCtrl'
       })
+      .when('/products', {
+        templateUrl: 'views/products.html',
+        controller: 'ProductsCtrl'
+      })
+      .when('/dashboard', {
+        templateUrl: 'views/dashboard.html',
+        controller: 'DashboardCtrl'
+      })
+      .when('/login', {
+        templateUrl: 'views/login.html',
+        controller: 'LoginCtrl'
+      })
       .otherwise({
-        redirectTo: '/'
+        redirectTo: '/dashboard'
       });
-  }).controller('AppController', function($scope, $location)
+  })
+  .controller('AppController', ['$scope', 'LoginService', function($scope, LoginService)
   {
-    $scope.isActive = function (viewLocation) { 
-      window.console.log('viewLocation', viewLocation);
-      return viewLocation === $location.path();
+    $scope.logout = function(){
+      LoginService.logout();
     };
-  });
+  }]);

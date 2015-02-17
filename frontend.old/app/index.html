@@ -1,4 +1,5 @@
-<!doctype html>
+  <!doctype html>
+  <!doctype html>
 <html class="no-js">
   <head>
     <meta charset="utf-8">
@@ -21,23 +22,19 @@
     <![endif]-->
 
     <!-- Add your site or application content here -->
-    <div class="container">
-      <div class="header">
-        <ul class="nav nav-pills pull-right">
-          <li><a ng-href="#/main">Home</a></li>
-          <li><a ng-href="#/users">Usuários</a></li>
-          <li><a ng-href="#/products">Produtos</a></li>
-          <li ng-show="LoginService.token"><a href ng-click="logout()">Logout</a></li>
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#/">Curso AngularJS</a>
+        </div>
+         <ul class="nav navbar-nav">
+          <li ng-class="isActive('/main') ? 'active' : ''"><a href="#/main">Main</a></li>
+          <li ng-class="isActive('/about') ? 'active' : ''"><a href="#/about">About</a></li>
+          <li ng-class="isActive('/users') ? 'active' : ''"><a href="#/users">Users</a></li>
         </ul>
-        <h3 class="text-muted">cursoAngular</h3>
-      </div>
-
-      <div ng-view=""></div>
-
-      <div class="footer">
-        <p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>
-      </div>
-    </div>
+      </div><!-- /.container-fluid -->
+    </nav>
+    <div class="container" ng-view=""></div>
 
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
@@ -69,17 +66,18 @@
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/angular-touch/angular-touch.js"></script>
-    <script src="bower_components/base64/base64.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
+        <script src="scripts/controllers/main.js"></script>
+        <script src="scripts/controllers/about.js"></script>
+        <script src="scripts/services/restservice.js"></script>
         <script src="scripts/controllers/users.js"></script>
-        <script src="scripts/controllers/products.js"></script>
-        <script src="scripts/controllers/dashboard.js"></script>
         <script src="scripts/controllers/login.js"></script>
         <script src="scripts/services/loginservice.js"></script>
+        <script src="scripts/services/loginprovider.js"></script>
         <!-- endbuild -->
 </body>
 </html>
