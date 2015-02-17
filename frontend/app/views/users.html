@@ -10,7 +10,7 @@
 			<th>ID</th>
 			<th>Nome</th>
 			<th>Email</th>
-			<th>Ações</th>
+			<th width="1%">Ações</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -18,7 +18,56 @@
 			<td>{{user.id}}</td>
 			<td>{{user.first_name}} {{user.last_name}}</td>
 			<td>{{user.email}}</td>
-			<td>X</td>
+			<td nowrap="nowrap">
+				<button class="btn btn-primary" ng-click="carregar(user)">editar</button>
+				<button class="btn btn-danger" ng-click="remover(user)">remover</button>
+			</td>
 		</tr>
 	</tbody>
 </table>
+
+<form ng-submit="save()">
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group">
+			  <label for="first_name">Nome</label>
+			  <input class="form-control" type="text" ng-model="user.first_name" id="first_name">
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group">
+			  <label for="last_name">Sobrenome</label>
+			  <input class="form-control" type="text" ng-model="user.last_name" id="last_name">
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group">
+			  <label for="email">E-mail</label>
+			  <input class="form-control" type="text" ng-model="user.email" id="email">
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group">
+			  <label for="password">Senha</label>
+			  <input class="form-control" type="text" ng-model="user.password" id="password">
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group">
+			  <label for="city">Cidade</label>
+			  <input class="form-control" type="text" ng-model="user.city" id="city">
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group">
+			  <label for="state">Estado</label>
+			  <input class="form-control" type="text" ng-model="user.state" id="state">
+			</div>
+		</div>
+	</div>
+	<button class="btn btn-default">Salvar</button>
+</form>

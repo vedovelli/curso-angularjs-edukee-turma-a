@@ -36,7 +36,7 @@ angular
         controller: 'LoginCtrl'
       })
       .otherwise({
-        redirectTo: '/dashboard'
+        redirectTo: '/users'
       });
   })
   .controller('AppController', ['$scope', '$location', 'AuthService', function($scope, $location, AuthService)
