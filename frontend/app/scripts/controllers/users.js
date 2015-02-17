@@ -11,7 +11,9 @@ angular.module('cursoAngularApp')
 
   .controller('UsersCtrl', ['$scope', '$http', 'LoginService', function ($scope, $http, LoginService) {
 
-    LoginService.thisIsProtected(function(token)
+    var redirectBack = location.hash;
+
+    LoginService.thisIsProtected(redirectBack, function(token)
     {
       $http.defaults.headers.common.Authorization = 'Basic ' + token;
       $http.get('http://curso-angular-api.app/api/user')

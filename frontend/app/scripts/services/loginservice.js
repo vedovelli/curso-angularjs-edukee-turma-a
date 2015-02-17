@@ -12,18 +12,24 @@ angular.module('cursoAngularApp')
 
   	var self = this;
   	self.token = null;
+    self.redirect = null;
 
   	self.login = function(email, password, callback)
   	{
-			$http.post('http://curso-angular-api.app/login', {email: email, password: password})
+			var response = {};
+      $http.post('http://curso-angular-api.app/login', {email: email, password: password})
 				.success(function(data)
 	  		{
 	  			self.token = data.token;
-	  			callback(true);
+          response.result = true;
+          response.redirect = self.redirect !== null ? self.redirect.substring(1) : '/';
+          callback(response);
 	  		})
 	  		.error(function()
 	  		{
-	  			callback(false);
+	  			response.result = false;
+          response.redirect = '/';
+          callback(response);
 	  		});
   	};
 
@@ -32,13 +38,15 @@ angular.module('cursoAngularApp')
   		$http.get('http://curso-angular-api.app/logout').success(function()
   		{
   			self.token = null;
+        self.redirect = null;
   			callback(true);
   		});
   	};
 
-  	self.thisIsProtected = function(callback)
+  	self.thisIsProtected = function(redirect, callback)
   	{
-  		if(self.token === null)
+      self.redirect = redirect;
+      if(self.token === null)
   		{
   			$location.path('login');
   			return false;

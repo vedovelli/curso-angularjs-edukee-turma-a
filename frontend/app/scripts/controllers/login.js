@@ -15,13 +15,14 @@ angular.module('cursoAngularApp')
 
   	$scope.login = function()
   	{
-  		LoginService.login($scope.email, $scope.password, function(result)
+  		LoginService.login($scope.email, $scope.password, function(response)
   		{
-  			if(result)
+  			window.console.log('response', response);
+  			if(!response.result)
   			{
-  				$location.path('dashboard');
-  			} else {
   				$scope.errorMessage = 'Falha no login';
+  			} else {
+  				$location.path(response.redirect);
   			}
   		});
   	};
