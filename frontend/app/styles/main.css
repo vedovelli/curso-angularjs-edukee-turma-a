@@ -1,0 +1,129 @@
+/* Space out content a bit */
+body {
+  padding-top: 70px;
+  padding-bottom: 20px;
+}
+
+.spa-submit-btn{
+  position: absolute;
+  bottom: -65px;
+  right: 0;
+}
+
+.spa-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 100000;
+  background-color: rgba(0,0,0,0.7);
+}
+
+.spa-users.container-fluid{
+  min-height: 770px !important;
+}
+
+.ng-enter, .ng-move{
+
+  -webkit-animation: fadeIn 0.8s;
+  -moz-animation: fadeIn 0.8s;
+  -o-animation: fadeIn 0.8s;
+  animation: fadeIn 0.8s;
+}
+
+.spa-user-container.ng-hide-remove {
+
+  -webkit-animation: fadeIn 0.6s;
+  -moz-animation: fadeIn 0.6s;
+  -o-animation: fadeIn 0.6s;
+  animation: fadeIn 0.6s;
+}
+
+
+.spa-user-controls.ng-hide-add {
+
+  -webkit-animation: fadeOut 0.6s;
+  -moz-animation: fadeOut 0.6s;
+  -o-animation: fadeOut 0.6s;
+  animation: fadeOut 0.6s;
+}
+
+.spa-user-controls.ng-hide-remove{
+
+  -webkit-animation: flipInX 0.6s;
+  -moz-animation: flipInX 0.6s;
+  -o-animation: flipInX 0.6s;
+  animation: flipInX 0.6s;
+}
+
+.gravatar{
+  border-radius: 10px;
+}
+
+.spa-user-container{
+  min-height: 630px;
+}
+
+.spa-login-box{
+  margin-top: 150px;
+}
+
+.spa-container-btn-novo{
+  padding-top: 25px;
+}
+
+.spa-container-btn-novo button{
+  width: 100%;
+}
+
+.spa-user-item{
+  cursor: pointer;
+}
+
+.spa-user-card-body{
+  height: 145px;
+}
+
+.spa-user-form-image{
+  position: absolute;
+  right: 0; top: 50px;
+  border-radius: 10px;
+}
+
+.spa-user-form{
+  position: relative;
+}
+
+/* Animacao adicional ao modal Bootstrap */
+.modal {
+    /*! adjust transition time */
+    -webkit-transition: all ease-out !important;
+    -moz-transition: all 0.3s ease-out !important;
+    -o-transition: all 0.3s ease-out !important;
+    transition: all 0.3s ease-out !important;
+}
+.modal.in .modal-dialog {
+    /*! editthis transform to any transform you want */
+    -webkit-transform: scale(1.1, 1.1) !important;
+    -ms-transform: scale(1.1, 1.1) !important;
+    transform: scale(1.1, 1.1) !important;
+}
+.modal.fade .modal-dialog {
+    /*! disable sliding from left/right/top/bottom */
+    -webkit-transform: translate(0, 0);
+    -ms-transform: translate(0, 0);
+    transform: translate(0, 0);
+}
+
+/* Resize and reposition top*/
+
+.bootbox-confirm > .modal-dialog{
+  margin: 200px auto;
+  width: 400px !important;
+}
+
+.modal-dialog{
+  width: 65%;
+  margin: 160px auto;
+}
