@@ -9,19 +9,18 @@
  */
 angular.module('cursoAngularApp')
 
-  .controller('UsersCtrl', ['$scope', '$http', 'LoginService', function ($scope, $http, LoginService) {
+  .controller('UsersCtrl', ['$scope', 'AuthService', 'UserService', function ($scope, AuthService, UserService) {
 
     var redirectBack = location.hash;
 
-    LoginService.thisIsProtected(redirectBack, function(token)
+    AuthService.thisIsProtected(redirectBack, function(token)
     {
-      $http.defaults.headers.common.Authorization = 'Basic ' + token;
-      $http.get('http://curso-angular-api.app/api/user')
-      .success(function(data){
-      	$scope.users = data;
-      })
-      .error(function(data){
-      	window.console.log('error', data);
+      UserService.getUsers(token, function(response)
+      {
+        if(response)
+        {
+          $scope.users = response;
+        }
       });
     });
   }]);

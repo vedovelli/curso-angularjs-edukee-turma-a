@@ -8,16 +8,15 @@
  * Controller of the cursoAngularApp
  */
 angular.module('cursoAngularApp')
-  .controller('LoginCtrl', ['$scope', '$location', 'LoginService', function ($scope, $location, LoginService) {
+  .controller('LoginCtrl', ['$scope', '$location', 'AuthService', function ($scope, $location, AuthService) {
 
   	$scope.email = 'vedovelli@gmail.com';
   	$scope.password = '123456';
 
   	$scope.login = function()
   	{
-  		LoginService.login($scope.email, $scope.password, function(response)
+  		AuthService.login($scope.email, $scope.password, function(response)
   		{
-  			window.console.log('response', response);
   			if(!response.result)
   			{
   				$scope.errorMessage = 'Falha no login';

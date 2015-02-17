@@ -39,10 +39,10 @@ angular
         redirectTo: '/dashboard'
       });
   })
-  .controller('AppController', ['$scope', '$location', 'LoginService', function($scope, $location, LoginService)
+  .controller('AppController', ['$scope', '$location', 'AuthService', function($scope, $location, AuthService)
   {
     $scope.logout = function(){
-      LoginService.logout(function(result)
+      AuthService.logout(function(result)
       {
         if(result)
         {
