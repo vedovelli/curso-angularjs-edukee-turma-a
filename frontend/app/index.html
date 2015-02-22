@@ -9,10 +9,21 @@
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="bower_components/select2/select2.css" />
+    <link rel="stylesheet" href="bower_components/animate-css/animate.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+    <!-- build:css(.tmp) styles/select2-bootstrap.css -->
+    <link rel="stylesheet" href="styles/select2-bootstrap.css">
+    <!-- endbuild -->
+    <!-- build:css(.tmp) sbadmin/css/sb-admin.css -->
+    <link href="sbadmin/css/sb-admin.css" rel="stylesheet">
+    <!-- endbuild -->
+    <!-- build:css(.tmp) sbadmin/font-awesome/css/font-awesome.min.css -->
+    <link href="sbadmin/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <!-- endbuild -->
   </head>
   <body ng-app="cursoAngularApp" ng-controller="AppController">
@@ -69,7 +80,9 @@
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/angular-touch/angular-touch.js"></script>
+    <script src="bower_components/select2/select2.js"></script>
     <!-- endbower -->
+    <script src="scripts/plugins/jquery.mask.js"></script>
     <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
@@ -80,6 +93,9 @@
         <script src="scripts/controllers/login.js"></script>
         <script src="scripts/services/userservice.js"></script>
         <script src="scripts/services/authservice.js"></script>
+        <script src="scripts/directives/select2.js"></script>
+        <script src="scripts/directives/masks.js"></script>
+        <script src="scripts/directives/validate.js"></script>
         <!-- endbuild -->
 </body>
 </html>

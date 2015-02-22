@@ -18,13 +18,17 @@ angular.module('cursoAngularApp')
       /**
       * Get all users
       */
-      UserService.getUsers(token, function(response)
+      window.console.log('$scope.users', $scope.users);
+      if($scope.users === undefined)
       {
-        if(response)
+        UserService.getUsers(token, function(response)
         {
-          $scope.users = response;
-        }
-      });
+          if(response)
+          {
+            $scope.users = response;
+          }
+        });
+      }
 
       /**
       * Save user
