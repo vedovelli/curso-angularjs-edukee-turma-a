@@ -1,79 +1,70 @@
-/* Space out content a bit */
-body {
-  padding-top: 20px;
-  padding-bottom: 20px;
+.gravatar{
+  border-radius: 10px;
 }
 
-/* Everything but the jumbotron gets side spacing for mobile first views */
-.header,
-.marketing,
-.footer {
-  padding-left: 15px;
-  padding-right: 15px;
+.spa-user-container{
+  min-height: 630px;
 }
 
-/* Custom page header */
-.header {
-  border-bottom: 1px solid #e5e5e5;
-}
-/* Make the masthead heading the same height as the navigation */
-.header h3 {
-  margin-top: 0;
-  margin-bottom: 0;
-  line-height: 40px;
-  padding-bottom: 19px;
+.spa-login-box{
+  margin-top: 150px;
 }
 
-/* Custom page footer */
-.footer {
-  padding-top: 19px;
-  color: #777;
-  border-top: 1px solid #e5e5e5;
+.spa-container-btn-novo{
+  padding-top: 25px;
 }
 
-/* Customize container */
-@media (min-width: 768px) {
-  .container {
-    max-width: 730px;
-  }
-}
-.container-narrow > hr {
-  margin: 30px 0;
+.spa-container-btn-novo button{
+  width: 100%;
 }
 
-/* Main marketing message and sign up button */
-.jumbotron {
-  text-align: center;
-  border-bottom: 1px solid #e5e5e5;
-}
-.jumbotron .btn {
-  font-size: 21px;
-  padding: 14px 24px;
+.spa-user-item{
+  cursor: pointer;
 }
 
-/* Supporting marketing content */
-.marketing {
-  margin: 40px 0;
-}
-.marketing p + h4 {
-  margin-top: 28px;
+.spa-user-card-body{
+  height: 145px;
 }
 
-/* Responsive: Portrait tablets and up */
-@media screen and (min-width: 768px) {
-  /* Remove the padding we set earlier */
-  .header,
-  .marketing,
-  .footer {
-    padding-left: 0;
-    padding-right: 0;
-  }
-  /* Space out the masthead */
-  .header {
-    margin-bottom: 30px;
-  }
-  /* Remove the bottom border on the jumbotron for visual effect */
-  .jumbotron {
-    border-bottom: 0;
-  }
+.spa-user-form-image{
+  position: absolute;
+  right: 0; top: 50px;
+  border-radius: 10px;
+}
+
+.spa-user-form{
+  position: relative;
+}
+
+/* Animacao adicional ao modal Bootstrap */
+.modal {
+    /*! adjust transition time */
+    -webkit-transition: all ease-out !important;
+    -moz-transition: all 0.3s ease-out !important;
+    -o-transition: all 0.3s ease-out !important;
+    transition: all 0.3s ease-out !important;
+}
+.modal.in .modal-dialog {
+    /*! editthis transform to any transform you want */
+    -webkit-transform: scale(1.1, 1.1) !important;
+    -ms-transform: scale(1.1, 1.1) !important;
+    transform: scale(1.1, 1.1) !important;
+}
+.modal.fade .modal-dialog {
+    /*! disable sliding from left/right/top/bottom */
+    -webkit-transform: translate(0, 0);
+    -ms-transform: translate(0, 0);
+    transform: translate(0, 0);
+}
+
+/* Resize and reposition top*/
+
+.bootbox-confirm > .modal-dialog{
+  margin: 200px auto;
+  width: 400px !important;
+}
+
+.modal-dialog{
+  width: 65%;
+  margin: 160px auto;
 }

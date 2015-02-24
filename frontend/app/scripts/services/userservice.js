@@ -9,55 +9,38 @@
  */
 angular.module('cursoAngularApp').service('UserService', function ($http) {
 
-	this.getUsers = function(token, callback)
-	{
-		this.setAuthHeader(token);
+  var apiUrl = 'http://curso-angular-api.app/api/user';
 
-    $http.get('http://curso-angular-api.app/api/user')
-      .success(function(data){
-      	callback(data);
-      })
-      .error(function(){
-      	callback(false);
-      });
-	};
-
-  this.saveUser = function(token, user, callback)
+  this.fetch = function(token, listState)
   {
     this.setAuthHeader(token);
-
-    if(user.id !== undefined)
-    {
-      $http.put('http://curso-angular-api.app/api/user/'+ user.id, user).success(function(data)
-      {
-        callback({result: true, user: data});
-      }).error(function()
-      {
-        callback({result: false, user: null});
-      });
-    } else {
-      $http.post('http://curso-angular-api.app/api/user', user).success(function(data)
-      {
-        callback({result: true, user: data});
-      }).error(function()
-      {
-        callback({result: false, user: null});
-      });
-    }
-
+    return $http.get(apiUrl+'?limit='+encodeURIComponent(listState.limit)+'&page='+encodeURIComponent(listState.page)+'&cities='+encodeURIComponent(listState.cities)+'&orderBy='+encodeURIComponent(listState.orderBy));
   };
 
-  this.removeUser = function(token, user, callback)
+  this.gravatar = function(email)
   {
-    $http.delete('http://curso-angular-api.app/api/user/'+ user.id)
-    .success(function()
+    return $http.get('http://spa.app/api/gravatar/'+email);
+  };
+
+  this.address = function(cep)
+  {
+    return $http.get('http://viacep.com.br/ws/'+cep+'/json/');
+  };
+
+  this.save = function(input)
+  {
+    if(input.id > 0)
     {
-      callback({result: true});
-    })
-    .error(function()
-    {
-      callback({result: false});
-    });
+      return $http.put(apiUrl+'/'+input.id, input);
+    } else {
+      return $http.post(apiUrl, input);
+    }
+  };
+
+  this.remove = function(token, input)
+  {
+    this.setAuthHeader(token);
+    return $http.delete(apiUrl+'/'+input.id);
   };
 
   this.setAuthHeader = function(token)
@@ -66,3 +49,61 @@ angular.module('cursoAngularApp').service('UserService', function ($http) {
   };
 
 });
+
+	// this.getUsers = function(token, callback)
+	// {
+	// 	this.setAuthHeader(token);
+
+ //    $http.get('http://curso-angular-api.app/api/user')
+ //      .success(function(data){
+ //      	callback(data);
+ //      })
+ //      .error(function(){
+ //      	callback(false);
+ //      });
+	// };
+
+ //  this.saveUser = function(token, user, callback)
+ //  {
+ //    this.setAuthHeader(token);
+
+ //    if(user.id !== undefined)
+ //    {
+ //      $http.put('http://curso-angular-api.app/api/user/'+ user.id, user).success(function(data)
+ //      {
+ //        callback({result: true, user: data});
+ //      }).error(function()
+ //      {
+ //        callback({result: false, user: null});
+ //      });
+ //    } else {
+ //      $http.post('http://curso-angular-api.app/api/user', user).success(function(data)
+ //      {
+ //        callback({result: true, user: data});
+ //      }).error(function()
+ //      {
+ //        callback({result: false, user: null});
+ //      });
+ //    }
+
+ //  };
+
+ //  this.removeUser = function(token, user, callback)
+ //  {
+ //    $http.delete('http://curso-angular-api.app/api/user/'+ user.id)
+ //    .success(function()
+ //    {
+ //      callback({result: true});
+ //    })
+ //    .error(function()
+ //    {
+ //      callback({result: false});
+ //    });
+ //  };
+
+ //  this.setAuthHeader = function(token)
+ //  {
+ //    $http.defaults.headers.common.Authorization = 'Basic ' + token;
+ //  };
+
+// });

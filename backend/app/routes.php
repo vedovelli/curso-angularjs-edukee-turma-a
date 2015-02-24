@@ -8,18 +8,10 @@ Route::get('logged-in', ['uses' => 'LoginController@isLogged']);
 
 Route::group(['prefix' => 'api', 'before' => 'auth.basic'], function()
 {
-	Route::group(['prefix' => 'user'], function()
-	{
-		Route::get('', ['uses' => 'UserController@users']);
-
-		Route::get('{id}', ['uses' => 'UserController@get']);
-
-		Route::post('', ['uses' => 'UserController@create']);
-
-		Route::put('{id}', ['uses' => 'UserController@update']);
-
-		Route::delete('{id}', ['uses' => 'UserController@remove']);
-	});
+	/**
+  * User
+  */
+  Route::resource('user', 'UserController');
 
 	Route::group(['prefix' => 'product'], function()
 	{

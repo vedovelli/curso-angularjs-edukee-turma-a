@@ -7,72 +7,317 @@
  * # UsersCtrl
  * Controller of the cursoAngularApp
  */
-angular.module('cursoAngularApp')
+var usr = angular.module('cursoAngularApp');
 
-  .controller('UsersCtrl', ['$scope', 'AuthService', 'UserService', function ($scope, AuthService, UserService) {
+usr.controller('UsersCtrl', [
+  '$scope',
+  '$window',
+  '$sce',
+  'AuthService',
+  'UserService',
+  'PaginationService',
 
-    var redirectBack = location.hash;
+  function ($scope, $window, $sce, AuthService, UserService, PaginationService) {
 
-    AuthService.thisIsProtected(redirectBack, function(token)
+  var redirectBack = location.hash;
+
+  AuthService.thisIsProtected(redirectBack, function(token)
+  {
+    $scope.serverSideValidationErrors = undefined;
+
+    $scope.submitted = false;
+
+    // O overlay pode ser escondido
+    $scope.userReady = false;
+
+    // Guarda a lista de usuários
+    $scope.users = [];
+
+    // Guarda um único usuário inclusão/edição
+    $scope.user = {};
+
+    // Guarda informações retornadas pela API e relacionadas à paginação
+    $scope.pagination = {};
+
+    // Paginação: inicia-se a página atual como 1
+    $scope.currentPage = 1;
+
+    // Paginação: quantidade de itens na lista
+    $scope.itemsPerPage = 6;
+
+    // Paginação: tamanho máximo de itens na barra de paginação
+    $scope.paginationRange = 16;
+
+    // Observa a propriedade email de user para consultar UserService e pedir o gravatar
+    $scope.$watch('user.email', function(value)
     {
+
       /**
-      * Get all users
+      * Antes da pesquisa deleta-se a propriedade no objeto user.
+      * Isso faz com que a imagem padrão seja mostrada
       */
-      window.console.log('$scope.users', $scope.users);
-      if($scope.users === undefined)
+      delete $scope.user.gravatar;
+
+      // Expressão regular para validar formato do e-mail
+      var objER = /^[a-zA-Z0-9][a-zA-Z0-9\._-]+@([a-zA-Z0-9\._-]+\.)[a-zA-Z-0-9]{2}/;
+
+      // input[type="email"] retorna undefined enquanto o e-mail não for válido
+      if(value !== undefined)
       {
-        UserService.getUsers(token, function(response)
+
+        // Testa o valor informado contra a expressão regular
+        var valid = objER.test(value);
+
+        // Caso válido, faz a consulta
+        if(valid)
         {
-          if(response)
-          {
-            $scope.users = response;
-          }
-        });
+          UserService.gravatar(value).success(function(data) {
+
+            /**
+            * API retorna um objeto contendo também a URL do gravatar
+            * ou a URL para a imagem padrão, caso o gravatar não tenha sido encontrado.
+            * Quando a propriedade user.gravatar é preenchida, a interface
+            * se modifica de acordo, mostrando o gravatar retornado.
+            */
+            $scope.user.gravatar = data.gravatar;
+          });
+        }
       }
+    });
+
+    // Observa a propriedade zip de user para consultar UserService e pedir Cidade/Estado
+    $scope.$watch('user.zip', function(value) {
 
       /**
-      * Save user
+      * Ao iniciar a digitação, limpa as duas propriedades
+      * que serão preenchidas pela consulta ao web service
       */
-      $scope.save = function()
-      {
-        UserService.saveUser(token, $scope.user, function(response)
-        {
-          var isUpdating = $scope.user.id !== undefined;
-          if(response.result)
-          {
-            if(!isUpdating)
-            {
-              $scope.users.push(response.user);
-            }
-            $scope.user = {};
-          } else {
-            window.alert('Falha na inclusão do usuário');
-          }
-        });
-      };
+      //
+      $scope.user.city = '';
+      $scope.user.state = '';
 
-      $scope.carregar = function(user)
+      // Verifica-se a quantidade de caracteres para atender a uma estrutura de XXXXX-XXX
+      if(value !== undefined && value.length === 9)
       {
-        $scope.user = user;
-      };
+        // Expressão regular para validar formato do cep
+        var objER = /^([0-9]){5}([-])([0-9]){3}$/;
 
-      /* jshint ignore:start */
-      $scope.remover = function(user)
-      {
-        var nome = user.first_name +' '+ user.last_name;
-        var confirm = window.confirm('Tetm certeza que deseja remover o usuário '+ nome +'?');
-        if(confirm)
+        // Testa o valor informado contra a expressão regular
+        var valid = objER.test(value);
+
+        // Caso válido, faz a consulta
+        if(valid)
         {
-          UserService.removeUser(token, user, function(response)
-          {
-            if(response.result)
+          UserService.address(value).success(function(data) {
+
+            if(!data.erro)
             {
-              var index = $scope.users.indexOf(user);
-              $scope.users.splice(index, 1);
+              // Seta as propriedades city e state
+              $scope.user.city = data.localidade;
+              $scope.user.state = data.uf;
             }
           });
         }
-      };
-      /* jshint ignore:end */
+
+      }
+
     });
-  }]);
+
+    $scope.$watch('filterCities', function(value) {
+
+      if(value !== undefined) {
+
+        $scope.currentPage = 1;
+        $scope.fetchUsers();
+      }
+    });
+
+    $scope.$watch('filterOrderBy', function(value) {
+
+      if(value !== undefined) {
+
+        $scope.currentPage = 1;
+        $scope.fetchUsers();
+      }
+    });
+
+    $scope.prevPage = function ()
+    {
+          if ($scope.currentPage > 0)
+          {
+              $scope.currentPage--;
+              $scope.fetchUsers();
+          }
+      };
+
+      $scope.nextPage = function ()
+      {
+          if ($scope.currentPage < $scope.pagination.lastPage)
+          {
+              $scope.currentPage++;
+              $scope.fetchUsers();
+          }
+      };
+
+      $scope.setPage = function ()
+      {
+          $scope.currentPage = this.n;
+          $scope.fetchUsers();
+      };
+
+    $scope.clear = function()
+    {
+      $scope.filterCities = undefined;
+      $scope.filterOrderBy = undefined;
+      $scope.fetchUsers();
+    };
+
+    $scope.new = function()
+    {
+
+      $scope.user = {};
+    };
+
+    $scope.edit = function(user)
+    {
+      $scope.user = user;
+    };
+
+    $scope.save = function(form)
+    {
+
+      if(form.$valid)
+      {
+
+        $scope.user.fullname = '';
+        UserService.save($scope.user)
+          .success(function(data) {
+
+            if(data.success){
+
+              $scope.userReady = false;
+
+              // var form = angular.element(userForm);
+              //     form.find('input:password').val('');
+              //     form.modal('hide');
+
+              $scope.user = {};
+              $scope.fetchUsers();
+              $scope.serverSideValidationErrors = undefined;
+
+            }
+          })
+          .error(function(data) {
+
+            if(data.errors)
+            {
+              $scope.serverSideValidationErrors = '<strong>Mensagem do servidor:</strong><br>';
+
+              for(var prop in data.errors)
+              {
+                $scope.serverSideValidationErrors += '&bull; ' + data.errors[prop] + '<br>';
+              }
+
+              $scope.serverSideValidationErrors = $sce.trustAsHtml($scope.serverSideValidationErrors);
+            }
+          });
+
+        $scope.submitted = false;
+      } else {
+
+        $scope.submitted = true;
+      }
+
+
+    };
+
+    $scope.remove = function(user)
+    {
+      $window.bootbox.confirm('Remover '+ user.fullname +'?', function(action)
+      {
+        if(action)
+        {
+          UserService.remove(token, user).success(function(data)
+          {
+            if(data.success)
+            {
+              $scope.fetchUsers();
+            }
+          });
+        }
+      });
+    };
+
+    $scope.fetchUsers = function()
+    {
+      if($scope.filterCities === '')
+      {
+        $scope.filterCities = undefined;
+      }
+
+      if($scope.filterOrderBy === '')
+      {
+        $scope.filterOrderBy = undefined;
+      }
+
+      UserService.fetch(token,
+      {
+        cities: $scope.filterCities,
+        orderBy: $scope.filterOrderBy,
+        limit: $scope.itemsPerPage,
+        page: $scope.currentPage
+      }).success(function(data)
+      {
+        $scope.users = data.users;
+        $scope.pagination = data.pagination;
+        $scope.range = PaginationService.generatePagesArray($scope.currentPage, $scope.pagination.total, $scope.itemsPerPage, $scope.paginationRange);
+        $scope.userReady = true;
+      });
+    };
+
+    $scope.fetchUsers();
+  }); // auth
+}]);
+
+usr.directive('userCard', function()
+{
+
+  return {
+
+    restrict: 'E',
+
+    templateUrl: '/views/user.partials/users.card.html',
+
+    link: function(scope)
+    {
+
+      scope.showControls = false;
+
+      scope.toggleControls = function(state) {
+
+        scope.showControls = state;
+      };
+    }
+  };
+});
+
+usr.directive('userFilter', function()
+{
+
+  return {
+
+    restrict: 'E',
+
+    templateUrl: '/views/user.partials/users.filter.html'
+  };
+});
+
+usr.directive('userForm', function() {
+
+  return {
+
+    restrict: 'E',
+
+    templateUrl: '/views/user.partials/users.form.html'
+  };
+});

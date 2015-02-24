@@ -1,62 +1,101 @@
 <?php
+// TODO adicionar error handling
 
 use Illuminate\Auth\UserTrait;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableTrait;
 use Illuminate\Auth\Reminders\RemindableInterface;
 
-class User extends Eloquent implements UserInterface, RemindableInterface{
+class User extends Eloquent implements UserInterface, RemindableInterface {
 
 	use UserTrait, RemindableTrait;
 
+	protected $fillable = ['fullname', 'username', 'email', 'password', 'zip', 'city', 'state' ];
 	protected $hidden = ['password', 'remember_token'];
 
-	protected $fillable = ['first_name', 'last_name', 'email', 'password', 'city', 'state'];
-
-	public function users()
+	public function setPasswordAttribute($value)
 	{
-		return self::all();
+		$this->attributes['password'] = Hash::make($value);
 	}
 
-	public function createUser()
+	public function list_users($cities, $orderBy, $limit = 10, $page = 1)
 	{
-		$input = Input::all();
-		$input['password'] = Hash::make($input['password']);
-		$user = new User();
+
+		$paginator = $this;
+
+		if(!is_null($cities)){
+
+			$cities = explode(',',$cities);
+			$paginator = $paginator->wherein('city', $cities);
+		}
+
+		if(!is_null($orderBy)){
+
+			$orderBy = explode('|', $orderBy);
+			$paginator = $paginator->orderBy($orderBy[0], $orderBy[1]);
+		} else {
+
+			$paginator = $paginator->orderBy('updated_at', 'desc');
+		}
+
+		$paginator = $paginator->paginate($limit);
+
+		$users = $paginator->getItems();
+
+		foreach ($users as $index => $user) {
+
+			$user['gravatar'] = $this->get_gravatar($user['email']);
+			$users[$index] = $user;
+		}
+
+		$response = [
+			'users'   => $users,
+			'pagination' => [
+				'total'        => $paginator->getTotal(),
+				'per_page'     => $paginator->getPerPage(),
+				'current_page' => $paginator->getCurrentPage(),
+				'last_page'    => $paginator->getLastPage(),
+				'from'         => $paginator->getFrom(),
+				'to'           => $paginator->getTo()
+			]
+		];
+
+		return $response;
+	}
+
+	function get_gravatar($email) {
+
+		return "http://www.gravatar.com/avatar/" . md5(strtolower(trim($email))) . "?s=200";
+	}
+
+	public function get_user($id)
+	{
+		return $this->find($id);
+	}
+
+	public function save_user($input)
+	{
+		return $this->create($input);
+	}
+
+	public function update_user($id, $input)
+	{
+		$user = $this->find($id);
+
 		$user->fill($input);
+
 		$user->save();
+
 		return $user;
 	}
 
-	public function get($id)
+	public function delete_user($id)
 	{
-		return self::find($id);
-	}
+		$user = $this->find($id);
 
-	public function updateUser($id)
-	{
-		$user = self::find($id);
-		if(!is_null($user))
-		{
-			$input = Input::all();
-			if(isset($input['password']))
-			{
-				$input['password'] = Hash::make($input['password']);
-			}
-			$user->fill($input);
-			return $user->save();
-		}
-		return false;
-	}
+		$user->delete();
 
-	public function removeUser($id)
-	{
-		$user = self::find($id);
-		if(is_null($user))
-		{
-			return false;
-		}
-		return $user->delete();
+		return $user;
 	}
 
 }
