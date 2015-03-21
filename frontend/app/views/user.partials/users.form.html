@@ -69,7 +69,7 @@
 				<div class="col-md-2">
 					<div class="form-group" ng-class="{ 'has-error': userForm.zip.$invalid && submitted }">
 						<label for="txtCep">CEP</label>
-						<input type="text" autocomplete="off" class="form-control" name="zip" id="txtCep" ng-model="user.zip" required>
+						<input type="text" autocomplete="off" class="form-control" name="zip" id="txtCep" ng-model="user.zip" required mask="00000-000">
 						<p class="text-danger" ng-show="userForm.zip.$invalid && submitted"><small>CEP é obrigatório</small></p>
 					</div>
 				</div>

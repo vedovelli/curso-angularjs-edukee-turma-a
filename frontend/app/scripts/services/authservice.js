@@ -31,8 +31,11 @@ angular.module('cursoAngularApp').service('AuthService', function ($http, $locat
       /** Em caso de retorno positivo: */
       .success(function(data)
   		{
-  			/** Armazena o token retornado pela API */
+        /** Armazena o token retornado pela API */
         self.token = data.token;
+
+  			/** Adiciona o header de autorização para a API local */
+        self.addAuth();
 
         /** Determina que a ação de login foi bem sucedida */
         response.result = true;
@@ -97,5 +100,22 @@ angular.module('cursoAngularApp').service('AuthService', function ($http, $locat
     /** Caso o token exista (usuário está logado), executa o callback passado para o método. */
 		callback(self.token);
 	};
+
+  /**
+  * Algumas APIs não aceitam header de autorização
+  * Este método remove o header de $http
+  */
+  self.removeAuth = function()
+  {
+    $http.defaults.headers.common.Authorization = undefined;
+  };
+
+  /**
+  * Adiciona o header de autorização para a API local
+  */
+  self.addAuth = function()
+  {
+    $http.defaults.headers.common.Authorization = 'Basic ' + self.token;
+  };
 
 });

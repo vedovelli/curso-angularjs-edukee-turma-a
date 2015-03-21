@@ -6,25 +6,21 @@ Route::get('logout', ['uses' => 'LoginController@logout']);
 
 Route::get('logged-in', ['uses' => 'LoginController@isLogged']);
 
-Route::group(['prefix' => 'api', 'before' => 'auth.basic'], function()
+Route::group(['prefix' => 'api'], function()
 {
 	/**
   * User
   */
   Route::resource('user', 'UserController');
 
-	Route::group(['prefix' => 'product'], function()
-	{
-		Route::get('', ['uses' => 'ProductController@products']);
+  Route::resource('product', 'ProductController');
 
-		Route::get('{id}', ['uses' => 'ProductController@get']);
+  Route::get('cities', ['uses' => 'CityController@listCities']);
 
-		Route::post('', ['uses' => 'ProductController@create']);
+  Route::get('gravatar/{email}', ['uses' => 'UserController@gravatar']);
 
-		Route::put('{id}', ['uses' => 'ProductController@update']);
+  Route::post('upload', ['uses' => 'UploadController@receive']);
 
-		Route::delete('{id}', ['uses' => 'ProductController@remove']);
-	});
 });
 
 Route::get('docs', function()
@@ -37,9 +33,12 @@ App::missing(function()
     return Redirect::to('docs');
 });
 
+/**
+* CSRF
+*/
 App::before(function($request)
 {
-  header("Access-Control-Allow-Origin: *");
+  header("Access-Control-Allow-Origin: *"); // todas as origens estão autorizadas
   header('Access-Control-Allow-Credentials: true');
   if (Request::getMethod() == "OPTIONS") {
     $headers = [

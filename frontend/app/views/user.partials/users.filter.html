@@ -6,7 +6,7 @@
 			<div class="form-group">
 				<label for="selectCity">filtre por Cidade</label>
 				<!--Cidades são carregadas dinamicamente-->
-				<select name="city_filter" class="form-control" multiple select2 source="http://spa.app/api/cities" property="city" placeholder="Selecione uma ou mais cidades" ng-model="filter_cities"></select>
+				<select name="city_filter" class="form-control" multiple select2 source="http://curso-angular-api.app/api/cities" property="city" placeholder="Selecione uma ou mais cidades" ng-model="filterCities"></select>
 			</div>
 		</form>
 	</div>
@@ -14,7 +14,7 @@
 		<form action="#">
 			<div class="form-group">
 				<label for="selectOrdenacao">ordenar por</label>
-				<select name="order_filter" class="form-control" placeholder="Selecione a ordenação" select2 ng-model="filter_orderBy" allowClear = "true">
+				<select name="order_filter" class="form-control" placeholder="Selecione a ordenação" select2 ng-model="filterOrderBy" allowClear = "true">
 					<option selected></option>
 					<option value="fullname|asc">por Nome ascendente</option>
 					<option value="fullname|desc">por Nome descendente</option>

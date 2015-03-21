@@ -17,7 +17,7 @@ angular.module('cursoAngularApp')
   	{
   		AuthService.login($scope.email, $scope.password, function(response)
   		{
-  			if(!response.result)
+        if(!response.result)
   			{
   				$scope.errorMessage = 'Falha no login';
   			} else {

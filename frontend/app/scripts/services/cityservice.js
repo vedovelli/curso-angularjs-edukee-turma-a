@@ -11,6 +11,6 @@ angular.module('cursoAngularApp')
   .service('CityService', function ($http) {
     this.fetch = function(apiUrl)
     {
-			return $http.get(apiUrl);
+      return $http.get(apiUrl);
 		};
   });

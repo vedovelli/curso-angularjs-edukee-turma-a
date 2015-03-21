@@ -10,8 +10,8 @@
 angular.module('cursoAngularApp')
   .controller('ProductsCtrl', ['$scope', 'AuthService', function ($scope, AuthService) {
   	var redirectBack = location.hash;
-    AuthService.thisIsProtected(redirectBack, function(token)
+    AuthService.thisIsProtected(redirectBack, function()
     {
-    	window.console.log('token', token);
+
     });
   }]);

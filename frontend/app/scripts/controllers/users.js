@@ -21,7 +21,7 @@ usr.controller('UsersCtrl', [
 
   var redirectBack = location.hash;
 
-  AuthService.thisIsProtected(redirectBack, function(token)
+  AuthService.thisIsProtected(redirectBack, function()
   {
     $scope.serverSideValidationErrors = undefined;
 
@@ -51,7 +51,6 @@ usr.controller('UsersCtrl', [
     // Observa a propriedade email de user para consultar UserService e pedir o gravatar
     $scope.$watch('user.email', function(value)
     {
-
       /**
       * Antes da pesquisa deleta-se a propriedade no objeto user.
       * Isso faz com que a imagem padrão seja mostrada
@@ -71,8 +70,8 @@ usr.controller('UsersCtrl', [
         // Caso válido, faz a consulta
         if(valid)
         {
-          UserService.gravatar(value).success(function(data) {
-
+          UserService.gravatar(value).success(function(data)
+          {
             /**
             * API retorna um objeto contendo também a URL do gravatar
             * ou a URL para a imagem padrão, caso o gravatar não tenha sido encontrado.
@@ -108,6 +107,8 @@ usr.controller('UsersCtrl', [
         // Caso válido, faz a consulta
         if(valid)
         {
+          // Remove o header de autorizacão pois a API ViaCep não o aceita
+          AuthService.removeAuth();
           UserService.address(value).success(function(data) {
 
             if(!data.erro)
@@ -115,16 +116,17 @@ usr.controller('UsersCtrl', [
               // Seta as propriedades city e state
               $scope.user.city = data.localidade;
               $scope.user.state = data.uf;
+
+              // Adiciona o header de autorização para chamadas subsequentes à API local
+              AuthService.addAuth();
             }
           });
         }
-
       }
-
     });
 
-    $scope.$watch('filterCities', function(value) {
-
+    $scope.$watch('filterCities', function(value)
+    {
       if(value !== undefined) {
 
         $scope.currentPage = 1;
@@ -132,8 +134,8 @@ usr.controller('UsersCtrl', [
       }
     });
 
-    $scope.$watch('filterOrderBy', function(value) {
-
+    $scope.$watch('filterOrderBy', function(value)
+    {
       if(value !== undefined) {
 
         $scope.currentPage = 1;
@@ -237,7 +239,7 @@ usr.controller('UsersCtrl', [
       {
         if(action)
         {
-          UserService.remove(token, user).success(function(data)
+          UserService.remove(user).success(function(data)
           {
             if(data.success)
             {
@@ -250,9 +252,12 @@ usr.controller('UsersCtrl', [
 
     $scope.fetchUsers = function()
     {
-      if($scope.filterCities === '')
+      if($scope.filterCities !== undefined)
       {
-        $scope.filterCities = undefined;
+        if($scope.filterCities === '' || $scope.filterCities.length === 0)
+        {
+          $scope.filterCities = undefined;
+        }
       }
 
       if($scope.filterOrderBy === '')
@@ -260,8 +265,7 @@ usr.controller('UsersCtrl', [
         $scope.filterOrderBy = undefined;
       }
 
-      UserService.fetch(token,
-      {
+      UserService.fetch(      {
         cities: $scope.filterCities,
         orderBy: $scope.filterOrderBy,
         limit: $scope.itemsPerPage,
